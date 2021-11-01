@@ -3,6 +3,7 @@ let express = require("express");
 let cors = require("cors");
 let bodyParser = require("body-parser");
 let expressJwt = require("express-jwt");
+let mongoose = require("mongoose");
 
 const environment = require("./config/environment");
 let apiRoutes = require("./api-routes");
@@ -12,6 +13,19 @@ let app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+mongoose.connect(environment.mongodb.uri, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true
+});
+
+mongoose.Promise = global.Promise;
+mongoose.connection.on("error", (error) => {
+  console.log("Database error: ", error);
+});
+mongoose.connection.on("connected", () => {
+  console.log("Connected to database");
+});
 
 app.use("/api", apiRoutes);
 app.use(
@@ -30,7 +44,13 @@ app.use(
       return null;
     }
   }).unless({
-    path: ["/*.js", "/*.css"]
+    path: [
+      "/api/user/authenticate",
+      "/api/users",
+      "/index.html",
+      "/*.js",
+      "/*.css"
+    ]
   })
 );
 

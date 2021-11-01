@@ -1,0 +1,23 @@
+version: "2"
+
+services:
+  database:
+    image: mongo
+    container_name: gateway_mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin-user
+      - MONGO_INITDB_ROOT_PASSWORD=admin-password
+      - MONGO_DB_USERNAME=admin-user1
+      - MONGO_DB_PASSWORD=admin-password1
+      - MONGO_DB=gateways
+
+    volumes:
+      - mongodata:/home/mongodb
+      - ./mongo/init-db.d/:/docker-entrypoint-initdb.d/
+      - mongodata:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongodata:
