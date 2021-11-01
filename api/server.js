@@ -20,6 +20,7 @@ mongoose.connect(environment.mongodb.uri, {
 });
 
 mongoose.Promise = global.Promise;
+
 mongoose.connection.on("error", (error) => {
   console.log("Database error: ", error);
 });
@@ -27,7 +28,6 @@ mongoose.connection.on("connected", () => {
   console.log("Connected to database");
 });
 
-app.use("/api", apiRoutes);
 app.use(
   expressJwt({
     secret: environment.secret,
@@ -53,6 +53,8 @@ app.use(
     ]
   })
 );
+
+app.use("/api", apiRoutes);
 
 const HOST = "0.0.0.0";
 const server = app.listen(process.env.EXPRESS_PORT || 3000, HOST, () => {

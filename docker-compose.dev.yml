@@ -1,0 +1,44 @@
+version: "2"
+
+services:
+  express:
+    build:
+      context: ./api
+      dockerfile: dev.dockerfile
+    container_name: gateway_express
+    volumes:
+      - ./api:/api
+    ports:
+      - "3000:3000"
+    environment:
+      - SECRET=Thisismysecret
+      - NODE_ENV=development
+      - MONGO_DB_USERNAME=admin-user
+      - MONGO_DB_PASSWORD=admin-password
+      - MONGO_DB_HOST=database
+      - MONGO_DB_PORT=
+      - MONGO_DB_PARAMETERS=?authSource=admin
+      - MONGO_DB_DATABASE=gateways
+    links:
+      - database
+
+  database:
+    image: mongo
+    container_name: gateway_mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin-user
+      - MONGO_INITDB_ROOT_PASSWORD=admin-password
+      - MONGO_DB_USERNAME=admin-user1
+      - MONGO_DB_PASSWORD=admin-password1
+      - MONGO_DB=gateways
+
+    volumes:
+      - mongodata:/home/mongodb
+      - ./mongo/init-db.d/:/docker-entrypoint-initdb.d/
+      - mongodata:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongodata:
