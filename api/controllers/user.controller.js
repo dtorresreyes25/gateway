@@ -107,6 +107,7 @@ exports.delete = function (req, res) {
           error: err
         });
       }
+
       res.json({
         status: "success",
         message: "User deleted"

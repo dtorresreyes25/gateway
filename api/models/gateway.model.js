@@ -16,13 +16,17 @@ const gatewaySchema = mongoose.Schema({
   devices: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "device"
+      ref: "Device"
     }
   ]
 });
 
-let Gateway = (module.exports = mongoose.model("gateway", gatewaySchema));
+let Gateway = (module.exports = mongoose.model(
+  "Gateway",
+  gatewaySchema,
+  "gateway"
+));
 
 module.exports.get = function (callback, limit) {
-  Gateway.find(callback).limit(limit);
+  Gateway.find(callback).populate("devices").limit(limit);
 };
