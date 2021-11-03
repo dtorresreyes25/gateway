@@ -11,7 +11,15 @@ const gatewaySchema = mongoose.Schema({
   },
   ipv4_address: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function (v) {
+        return v.match(
+          "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+        );
+      },
+      message: (props) => `${props.value} is not a valid IP`
+    }
   },
   devices: [
     {
