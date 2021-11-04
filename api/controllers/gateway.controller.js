@@ -63,11 +63,12 @@ exports.view = function (req, res) {
     }
     if (gateway == null) {
       return res.status(400).json({
-        success: false,
+        status: "error",
         message: "Gateway not found"
       });
     }
     res.json({
+      status: "success",
       message: "Gateway details loading..",
       data: gateway
     });
@@ -83,19 +84,20 @@ exports.update = function (req, res) {
       if (err) {
         res.status(400).json({
           status: "error",
-          error: err
+          message: err
         });
       }
       if (!gateway) {
         return res.status(400).json({
-          success: false,
-          error: "Gateway not found!"
+          status: "error",
+          message: "Gateway not found!"
         });
       }
 
       gateway.save(function (err) {
         if (err) res.json(err);
         res.json({
+          status: "success",
           message: "Gateway Info updated",
           data: gateway
         });
@@ -112,8 +114,8 @@ exports.delete = function (req, res) {
     function (err, state) {
       if (!state) {
         return res.status(400).json({
-          success: false,
-          error: "Gateway not found!"
+          status: "error",
+          message: "Gateway not found!"
         });
       }
       res.json({
@@ -122,4 +124,71 @@ exports.delete = function (req, res) {
       });
     }
   );
+};
+
+exports.addDevice = async function (req, res) {
+  try {
+    const getGateway = async () =>
+      await Gateway.findById(req.params.gateway_id).populate("devices");
+    const newDevice = await Device.create(req.body);
+    const gateway = await getGateway();
+
+    if (gateway && gateway.devices.length <= 10) {
+      const gatewayUpdated = await gateway.update(
+        { $push: { devices: newDevice._id } },
+        { new: true, useFindAndModify: false }
+      );
+      if (gatewayUpdated) {
+        res.json({
+          status: "success",
+          message: "New device created and gateway Info updated",
+          data: await getGateway()
+        });
+        return;
+      }
+    }
+    res.status(400).json({
+      status: "error",
+      message: "only 10 peripheral devices are allowed per gateway"
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: err
+    });
+  }
+};
+
+exports.deleteDevice = async function (req, res) {
+  try {
+    const device = await Device.findOne({ _id: req.params.device_id });
+    if (!device) {
+      res.status(400).json({
+        status: "error",
+        message: "Device not found!"
+      });
+      return;
+    }
+    await device.remove();
+    const gateways = await Gateway.findByIdAndUpdate(req.params.gateway_id, {
+      $pull: { devices: device._id }
+    }).populate("devices");
+    if (!gateways) {
+      res.status(400).json({
+        status: "error",
+        message: "Gateway not found!"
+      });
+      return;
+    }
+    res.json({
+      status: "success",
+      message: "Device deleted",
+      data: gateways
+    });
+  } catch (e) {
+    res.status(500).json({
+      success: false,
+      error: e
+    });
+  }
 };
