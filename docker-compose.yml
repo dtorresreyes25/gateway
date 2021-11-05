@@ -1,23 +1,36 @@
 version: "2"
 
 services:
+  express:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: gateway-prod_angular_express
+    ports:
+      - "3000:3000"
+    environment:
+      - SECRET=Thisismysecret
+      - MONGO_DB_USERNAME=admin-user
+      - MONGO_DB_PASSWORD=admin-password
+      - MONGO_DB_HOST=database
+      - MONGO_DB_PORT=
+      - MONGO_DB_PARAMETERS=?authSource=admin
+      - MONGO_DB_DATABASE=gateways_prod
+    links:
+      - database
+
   database:
-    image: mongo
-    container_name: gateway_mongo
-    restart: always
+    image: mongo:latest
+    container_name: gateway-prod_mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin-user
       - MONGO_INITDB_ROOT_PASSWORD=admin-password
       - MONGO_DB_USERNAME=admin-user1
       - MONGO_DB_PASSWORD=admin-password1
-      - MONGO_DB=gateways
-
+      - MONGO_DB=gateways_prod
     volumes:
-      - mongodata:/home/mongodb
-      - ./mongo/init-db.d/:/docker-entrypoint-initdb.d/
-      - mongodata:/data/db
+      - /home/mongodb
+      - /docker-entrypoint-initdb.d/
+      - /data/db
     ports:
       - "27017:27017"
-
-volumes:
-  mongodata:

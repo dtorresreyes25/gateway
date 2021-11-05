@@ -13,6 +13,7 @@ let app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(process.cwd() + "/public/"));
 
 mongoose.connect(environment.mongodb.uri, {
   useUnifiedTopology: true,
@@ -55,6 +56,10 @@ app.use(
 );
 
 app.use("/api", apiRoutes);
+
+app.get("/", (req, res) => {
+  res.sendFile(process.cwd() + "/public/index.html");
+});
 
 const HOST = "0.0.0.0";
 const server = app.listen(process.env.EXPRESS_PORT || 3000, HOST, () => {

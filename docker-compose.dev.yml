@@ -1,6 +1,19 @@
 version: "2"
 
 services:
+  angular:
+    build:
+      context: ./frontend
+      dockerfile: dev.dockerfile
+    container_name: gateway_angular
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "4200:4200"
+      - "49153:49153"
+    environment:
+      - NODE_ENV=dev
+
   express:
     build:
       context: ./api
