@@ -14,12 +14,13 @@ export class JwtInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (typeof window !== undefined) {
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      if (currentUser && currentUser.token) {
-        req.clone({
+    let currentUser = localStorage.getItem('currentUser');
+    if (typeof window !== undefined && currentUser) {
+      const { token } = JSON.parse(currentUser);
+      if (token) {
+        req = req.clone({
           setHeaders: {
-            Authorization: `Bearer ${currentUser.token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
       }

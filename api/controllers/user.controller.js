@@ -68,7 +68,7 @@ exports.view = function (req, res) {
       });
     }
     res.json({
-      message: "User details loading..",
+      message: "User details loaded",
       data: user
     });
   });
@@ -147,15 +147,14 @@ exports.authenticate = function (req, res) {
 exports.changePassword = function (req, res) {
   User.findById(req.params.user_id, function (err, user) {
     if (err) {
-      res.status(400).json({
+      return res.status(400).json({
         status: "error",
         error: err
       });
     }
-
-    if (user && bcrypt.compareSync(req.body.password, user.password)) {
-      if (req.body.password) {
-        user.password = bcrypt.hashSync(req.body.password, 10);
+    if (user && bcrypt.compareSync(req.body.oldPassword, user.password)) {
+      if (req.body.newPassword) {
+        user.password = bcrypt.hashSync(req.body.newPassword, 10);
       }
       user.save(function (err) {
         if (err) res.json(err);
@@ -165,7 +164,7 @@ exports.changePassword = function (req, res) {
         });
       });
     } else {
-      res.status(401).send({
+      res.status(400).send({
         status: "error",
         message: "Old password is wrong."
       });
