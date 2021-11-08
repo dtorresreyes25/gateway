@@ -43,7 +43,8 @@ export class LoginComponent implements OnInit {
         .subscribe(
           (data) => {
             this.loading = false;
-            this.router.navigate([this.returnUrl]);
+            // this.router.navigate([this.returnUrl]);
+            this.router.navigate(['/gateways']);
           },
           (error) => {
             this.toastrService.error(error.message);

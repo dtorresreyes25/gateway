@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+  <div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+      <h2>Gateway List</h2>
+    </div>
+    <div class="col-sm-8">
+      <div class="title-action">
+        <a
+          href="javascript:void(0);"
+          [routerLink]="['/gateways/create']"
+          class="btn btn-primary float-end"
+        >
+          <i class="fa fa-plus-circle"></i> Add New Gateway</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <ng-template #devicesTemplate let-row="row" let-value="value" let-i="index">
+    <app-device-badges [devices]="value"></app-device-badges>
+  </ng-template>
+
+  <div class="">
+    <br />
+    <ngx-datatable
+      class="material striped"
+      [rowHeight]="50"
+      [rows]="gateways"
+      [columns]="columns"
+      [selected]="selected"
+      [selectionType]="SelectionType.single"
+      (select)="onSelect($event)"
+      [sortType]="SortType.multi"
+      [limit]="5"
+      [footerHeight]="50"
+      [headerHeight]="50"
+    >
+    </ngx-datatable>
+  </div>
+</div>

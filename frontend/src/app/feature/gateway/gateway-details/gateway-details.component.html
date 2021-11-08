@@ -1,0 +1,44 @@
+<div class="panel panel-default">
+  <div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+      <h2>Gateway Details</h2>
+    </div>
+  </div>
+  <div>
+    <div class="col-md-7 offset-3 my-4">
+      <span class="anchor" id="formComplex"></span>
+      <h3>{{ gateway.human_readable_name }}</h3>
+      <form>
+        <div class="form-row mt-4">
+          <div class="col-sm-6 pb-3">
+            <label class="me-3">Serial:</label>
+            <span>{{ gateway.serial }}</span>
+          </div>
+          <div class="col-sm-6 pb-3">
+            <label class="me-3">IP:</label>
+            <span>{{ gateway.ipv4_address }}</span>
+          </div>
+          <div class="col-sm-6 col-md-12 pb-3">
+            <label class="me-3">Devices: </label>
+           <app-device-badges [devices]="gateway.devices"></app-device-badges>
+          </div>
+          <div class="col-sm-6 pb-3 my-5">
+            <span>
+              <a
+                href="javascript:void(0);"
+                [routerLink]="['/gateways']"
+                class="btn btn-primary"
+              >
+                <i class="fa fa-chevron-left"></i> Back</a
+              >
+            </span>
+            <span class="btn-group ms-3">
+              <span></span>
+              <button class="btn btn-primary" (click)="edit()">Edit</button>
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,16 +1,12 @@
+
 <nav class="sidebar" [ngClass]="{ sidebarPushRight: isActive, collapsed: collapsed }">
   <div class="list-group">
-    <a routerLink="/" [routerLinkActive]="['router-link-active']" class="list-group-item">
-      <i class="fa fa-fw fa-dashboard"></i>&nbsp;
-      <span>Dashboard</span>
-    </a>
     <a
-      [routerLink]="['/gateways']"
-      [routerLinkActive]="['router-link-active']"
-      tooltip="Gateways"
-      container="body"
-      style="z-index: 1000; position: relative;"
-      class="list-group-item"
+            [routerLink]="['/gateways']"
+            [routerLinkActive]="['router-link-active']"
+            container="body"
+            style="z-index: 1000; position: relative;"
+            class="list-group-item"
     >
       <i class="fa fa-fw fa-bar-chart-o"></i>&nbsp;
       <span>Gateways</span>
@@ -43,3 +39,5 @@
     <span>Collapse Sidebar</span>
   </div>
 </nav>
+
+

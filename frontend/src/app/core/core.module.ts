@@ -4,18 +4,16 @@ import {
   JwtInterceptorProvider,
 } from './interceptors';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AuthGuard } from './guards';
 import {
-  AlertMessagesService,
-  AlertMessagesComponent,
   ValidationMessagesComponent,
   ValidationService,
+  DeviceBadgesComponent,
 } from './components';
 import { LayoutModule } from './layout/layout.module';
-import { UserService } from './services';
+import { GatewayService, UserService } from './services';
 
 @NgModule({
   imports: [
@@ -24,12 +22,12 @@ import { UserService } from './services';
     ToastrModule.forRoot(),
     LayoutModule,
   ],
-  declarations: [AlertMessagesComponent, ValidationMessagesComponent],
+  declarations: [ValidationMessagesComponent, DeviceBadgesComponent],
   exports: [
-    AlertMessagesComponent,
     ValidationMessagesComponent,
     ToastrModule,
     LayoutModule,
+    DeviceBadgesComponent,
   ],
 })
 export class CoreModule {
@@ -41,8 +39,8 @@ export class CoreModule {
         ErrorInterceptorProvider,
         ToastrService,
         AuthGuard,
-        AlertMessagesService,
         UserService,
+        GatewayService,
         ValidationService,
       ],
     };

@@ -34,9 +34,9 @@ router
   .patch(gatewayController.update)
   .put(gatewayController.update)
   .delete(gatewayController.delete);
-router.route("/gateways/:gateway_id/device").post(gatewayController.addDevice);
+router.route("/gateway/:gateway_id/device").post(gatewayController.addDevice);
 router
-  .route("/gateways/:gateway_id/device/:device_id")
+  .route("/gateway/:gateway_id/device/:device_id")
   .delete(gatewayController.deleteDevice);
 
 module.exports = router;

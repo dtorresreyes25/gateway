@@ -69,10 +69,10 @@ exports.view = function (req, res) {
     }
     res.json({
       status: "success",
-      message: "Gateway details loading..",
+      message: "Gateway details loaded",
       data: gateway
     });
-  });
+  }).populate("devices");
 };
 
 exports.update = function (req, res) {
@@ -84,7 +84,7 @@ exports.update = function (req, res) {
       if (err) {
         res.status(400).json({
           status: "error",
-          message: err
+          message: err.reason.message
         });
       }
       if (!gateway) {
@@ -103,7 +103,7 @@ exports.update = function (req, res) {
         });
       });
     }
-  );
+  ).populate("devices");
 };
 
 exports.delete = function (req, res) {

@@ -1,0 +1,7 @@
+<ng-container ngFor *ngFor="let device of devices">
+  <span
+    class="badge rounded-pill me-2"
+    [ngClass]="device.status === 'online' ? 'bg-success' : 'bg-secondary'"
+    >{{ device.vendor }}
+  </span>
+</ng-container>
