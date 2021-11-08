@@ -58,12 +58,13 @@ export class GatewayFormComponent implements OnInit {
     const gateway = this.gatewayForm.value;
     const updatedGateway = {
       ...gateway,
-      devices: this.mapBooleanToStatusLabel(gateway.devices),
+      devices: this.getDevicesReadyToSave(gateway.devices),
     };
     if (gateway._id) {
       this.update(updatedGateway);
     } else {
-      delete gateway._id;
+      delete updatedGateway._id;
+      console.log(updatedGateway);
       this.save(updatedGateway);
     }
   }
@@ -100,11 +101,10 @@ export class GatewayFormComponent implements OnInit {
       gatewayDetails.devices.forEach((_) => {
         this.devices().push(this.newDevice());
       });
-      const updatedGatewayDetails = Object.assign({}, gatewayDetails);
-      updatedGatewayDetails.devices = this.mapBooleanToStatusLabel(
+      gatewayDetails.devices = this.getDevicesReadyToSave(
         gatewayDetails.devices
       );
-      this.gatewayForm.patchValue(updatedGatewayDetails);
+      this.gatewayForm.patchValue(gatewayDetails);
     }
   }
 
@@ -116,7 +116,7 @@ export class GatewayFormComponent implements OnInit {
     return this.formBuilder.group({
       _id: [''],
       vendor: ['', Validators.required],
-      status: [''],
+      status: false,
     });
   }
 
@@ -128,15 +128,48 @@ export class GatewayFormComponent implements OnInit {
     this.devices().removeAt(deviceId);
   }
 
-  private mapBooleanToStatusLabel(devices: any[]) {
-    return devices.map((device: any, i: number) => ({
-      ...device,
-      status:
-        typeof device.status === 'string'
-          ? device.status === 'online'
-          : !!device.status
-          ? 'online'
-          : 'offline',
-    }));
+  private getDevicesReadyToSave(devices: any[]) {
+    return devices.map((d: any, i: number) => {
+      let isChecked = false;
+      const device = Object.assign({}, d);
+      if (!device._id) {
+        delete device._id;
+      }
+      if (
+        typeof device.status === 'string' &&
+        device.status === 'online' &&
+        !isChecked
+      ) {
+        device.status = true;
+        isChecked = true;
+      }
+      if (
+        typeof device.status === 'string' &&
+        device.status === 'offline' &&
+        !isChecked
+      ) {
+        device.status = false;
+        isChecked = true;
+      }
+      if (
+        typeof device.status !== 'string' &&
+        device.status === true &&
+        !isChecked
+      ) {
+        device.status = 'online';
+        isChecked = true;
+      }
+      if (
+        typeof device.status !== 'string' &&
+        device.status === false &&
+        !isChecked
+      ) {
+        device.status = 'offline';
+        isChecked = true;
+      }
+      return {
+        ...device,
+      };
+    });
   }
 }

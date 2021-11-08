@@ -1,5 +1,6 @@
 Gateway = require("../models/gateway.model");
 Device = require("../models/device.model");
+util = require("../utils");
 
 exports.index = function (req, res) {
   Gateway.get(function (err, gateways) {
@@ -18,6 +19,14 @@ exports.index = function (req, res) {
 };
 
 exports.new = function (req, res) {
+  if (req.body.devices.length >= 11) {
+    res.status(400).json({
+      status: "error",
+      message: "only 10 peripheral devices are allowed per gateway"
+    });
+    return;
+  }
+
   Gateway.find({ serial: req.body.serial.trim() }, function (err, gateways) {
     if (err) {
       res.json({
@@ -76,6 +85,14 @@ exports.view = function (req, res) {
 };
 
 exports.update = function (req, res) {
+  if (req.body.devices.length >= 11) {
+    res.status(400).json({
+      status: "error",
+      message: "only 10 peripheral devices are allowed per gateway"
+    });
+    return;
+  }
+
   Gateway.findByIdAndUpdate(
     req.params.gateway_id,
     req.body,

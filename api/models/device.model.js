@@ -21,6 +21,8 @@ let Device = (module.exports = mongoose.model(
   "devices"
 ));
 
+module.exports.deviceSchema = deviceSchema;
+
 module.exports.get = function (callback, limit) {
   Device.find(callback).limit(limit);
 };

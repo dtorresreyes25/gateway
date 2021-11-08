@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const deviceModel = require("./device.model");
 
 const gatewaySchema = mongoose.Schema({
   serial: {
@@ -21,12 +22,7 @@ const gatewaySchema = mongoose.Schema({
       message: (props) => `${props.value} is not a valid IP`
     }
   },
-  devices: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Device"
-    }
-  ]
+  devices: [deviceModel.deviceSchema]
 });
 
 let Gateway = (module.exports = mongoose.model(

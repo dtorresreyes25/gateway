@@ -7,6 +7,7 @@ export interface Gateway {
 }
 
 export interface Device {
+  _id?: string;
   vendor: string;
   status: string;
   create_date: string;
